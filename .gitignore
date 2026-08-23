@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+
+# Fonts (large binary, download separately)
+fonts/
+
+# Test outputs (regenerate)
+tests/out/
+
+# OS
+.DS_Store
+*.swp
+*.swo

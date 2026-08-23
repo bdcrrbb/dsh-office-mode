@@ -1,0 +1,49 @@
+{
+  "color": {
+    "primary": "1F4E79",
+    "accent": "2E75B6",
+    "text": "333333",
+    "light": "D6E4F0"
+  },
+  "pptx": {
+    "titlePt": 32,
+    "bodyPt": 18,
+    "fontEastAsia": "微软雅黑",
+    "fontAscii": "Arial",
+    "slideWidth": "13.33in",
+    "slideHeight": "7.5in"
+  },
+  "docx": {
+    "tierA": {
+      "heading": "微软雅黑",
+      "body": "宋体",
+      "emphasis": "黑体",
+      "ascii": "Arial",
+      "asciiHeading": "Arial"
+    },
+    "tierB": {
+      "title": "方正小标宋简体",
+      "h1": "黑体",
+      "h2": "楷体_GB2312",
+      "body": "仿宋_GB2312",
+      "ascii": "Times New Roman",
+      "titlePt": 22,
+      "bodyPt": 16,
+      "lineSpacingPt": 28,
+      "margins": {
+        "top": "3.7cm",
+        "bottom": "3.5cm",
+        "left": "2.8cm",
+        "right": "2.6cm"
+      }
+    }
+  },
+  "chart": {
+    "font": "Noto Sans CJK SC",
+    "fontDir": "/home/dsh/office-toolchain/fonts",
+    "fontFiles": {
+      "Regular": "NotoSansCJKsc-Regular.otf",
+      "Bold": "NotoSansCJKsc-Bold.otf"
+    }
+  }
+}
