@@ -1,6 +1,6 @@
 ---
 name: report-writing
-description: "Writing methodology and structure decisions for office documents. Use when structuring reports, briefings, or official documents. Covers pyramid principle, SCQA, BLUF, and GB/T 9704 Chinese official document format."
+description: "写作方法论与结构决策:负责'怎么写'(结构/格式),不负责'调研什么内容'。当用户要求写 调研报告/简报/汇报/公文/一页纸简报 时触发;若任务还包含 深入研究/深度调研/全面分析 等调研动作,先用 deep-research 收集内容,再用本技能定结构成文。Covers pyramid principle, SCQA, BLUF, GB/T 9704."
 ---
 
 # 写作方法论与结构决策

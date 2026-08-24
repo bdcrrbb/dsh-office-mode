@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Use only for high-complexity research tasks requiring comprehensive multi-dimensional analysis, systematic evaluation, or when the user explicitly requests deep/comprehensive research. Triggered when ≥2 of 3 criteria are met: explicit depth keywords, ≥3 sub-questions needed, or time budget ≥5 minutes.
+description: "深度调研引擎:先于写作技能使用。当用户要求 深入研究/深度调研/全面分析/系统评估/市场格局分析/竞品调研/技术选型评估/文献综述,或调研主题需要拆分为≥3个子问题、需要多来源交叉验证时触发。产出带来源引用与质量分级的调研内容,之后再用 report-writing/docx 等技能成文。Use for deep research, comprehensive analysis, competitive landscape, due diligence — runs BEFORE writing/formatting skills."
 ---
 
 # Deep Research Skill
