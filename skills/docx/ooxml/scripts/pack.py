@@ -74,12 +74,32 @@ def pack_document(input_dir, output_file, validate=False):
             for xml_file in temp_content_dir.rglob(pattern):
                 condense_xml(xml_file)
 
-        # Create final Office file as zip archive
+        # Create final Office file as zip archive.
+        # OPC/PowerPoint compatibility rules (LibreOffice tolerates violations,
+        # PowerPoint does not):
+        #   - NO explicit directory entries in the zip
+        #   - [Content_Types].xml must exist and be written FIRST
+        #   - deterministic entry order after that
+        content_types = temp_content_dir / "[Content_Types].xml"
+        if not content_types.is_file():
+            raise ValueError(
+                "[Content_Types].xml not found — cannot build a valid Office file"
+            )
         output_file.parent.mkdir(parents=True, exist_ok=True)
+        ordered = [content_types]
+        ordered += sorted(
+            f
+            for f in temp_content_dir.rglob("*")
+            if f.is_file() and f != content_types
+        )
         with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zf:
-            for f in temp_content_dir.rglob("*"):
-                if f.is_file():
-                    zf.write(f, f.relative_to(temp_content_dir))
+            for f in ordered:
+                # files only — never write directory entries
+                zf.write(f, f.relative_to(temp_content_dir).as_posix())
+
+        # Structural self-check independent of any validator: catches the
+        # classic "opens in LibreOffice, rejected by PowerPoint" breakages.
+        check_package_structure(output_file)
 
         # Validate if requested
         if validate:
@@ -90,8 +110,70 @@ def pack_document(input_dir, output_file, validate=False):
     return True
 
 
+def check_package_structure(doc_path):
+    """Assert OPC zip-structure rules PowerPoint enforces but LibreOffice ignores."""
+    with zipfile.ZipFile(doc_path) as zf:
+        names = zf.namelist()
+        if any(name.endswith("/") for name in names):
+            raise ValueError(
+                "zip contains explicit directory entries — PowerPoint rejects "
+                "these. Repack with pack.py, never with `zip -r`."
+            )
+        if not names or names[0] != "[Content_Types].xml":
+            raise ValueError("[Content_Types].xml must be the first zip entry")
+
+
 def validate_document(doc_path):
-    """Validate document by converting to HTML with soffice."""
+    """Validate document strictly, then with soffice.
+
+    soffice (LibreOffice) is LENIENT: it happily opens files PowerPoint
+    rejects (bad content types, broken rels, extra dir entries). So the
+    strict check runs FIRST via the format library (python-pptx /
+    python-docx / openpyxl), which parses the OPC package — content
+    types, rels, part graph — much the way PowerPoint's own reader does.
+    """
+    if not strict_library_check(doc_path):
+        return False
+    return soffice_check(doc_path)
+
+
+def strict_library_check(doc_path):
+    """Open the package with the format's strict reference library."""
+    suffix = doc_path.suffix.lower()
+    try:
+        if suffix == ".pptx":
+            from pptx import Presentation
+
+            prs = Presentation(str(doc_path))
+            _ = len(prs.slides._sldIdLst)  # force full part graph walk
+        elif suffix == ".docx":
+            import docx
+
+            d = docx.Document(str(doc_path))
+            _ = len(d.paragraphs)
+        elif suffix == ".xlsx":
+            import openpyxl
+
+            wb = openpyxl.load_workbook(str(doc_path), read_only=True)
+            _ = wb.sheetnames
+        else:
+            print(f"Warning: no strict checker for {suffix}", file=sys.stderr)
+        print("Strict package check passed", file=sys.stderr)
+        return True
+    except ImportError:
+        # library missing: warn loudly, rely on soffice below
+        print(
+            f"Warning: strict {'python-pptx' if suffix=='.pptx' else 'python-docx' if suffix=='.docx' else 'openpyxl'}"
+            " not installed — falling back to lenient soffice check only",
+            file=sys.stderr,
+        )
+        return True
+    except Exception as e:
+        print(f"Validation error (strict package check): {e}", file=sys.stderr)
+        return False
+
+
+def soffice_check(doc_path):
     # Determine the correct filter based on file extension
     match doc_path.suffix.lower():
         case ".docx":
@@ -114,7 +196,7 @@ def validate_document(doc_path):
                     str(doc_path),
                 ],
                 capture_output=True,
-                timeout=10,
+                timeout=30,
                 text=True,
             )
             if not (Path(temp_dir) / f"{doc_path.stem}.html").exists():

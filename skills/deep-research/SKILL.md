@@ -3,6 +3,11 @@ name: deep-research
 description: "深度调研引擎:先于写作技能使用。当用户要求 深入研究/深度调研/全面分析/系统评估/市场格局分析/竞品调研/技术选型评估/文献综述,或调研主题需要拆分为≥3个子问题、需要多来源交叉验证时触发。产出带来源引用与质量分级的调研内容,之后再用 report-writing/docx 等技能成文。Use for deep research, comprehensive analysis, competitive landscape, due diligence — runs BEFORE writing/formatting skills."
 ---
 
+## 输出位置规范(全局)
+
+所有调研产物统一落盘到**当前工作目录**下的 `./output/<date>-<slug>/`(即 `$PWD/output/...`,相对路径调用)。
+**禁止**写到 ~/office 或任何用户主目录下的固定路径——产物跟随会话工作目录;仅当用户明确指定时例外。下文示例中的 `./output/...` 均为此语义。
+
 # Deep Research Skill
 
 ## Trigger Decision Tree
@@ -95,7 +100,7 @@ Final Deliverable
 ```bash
 python3 /home/dsh/office-mode/skills/deep-research/scripts/research.py \
   "<research_query>" \
-  ~/office/<date>-<slug>/
+  ./output/<date>-<slug>/ ($PWD 之下)
 ```
 
 **Output**: `research_state.json` initialized with query and empty sub-questions list.
@@ -116,7 +121,7 @@ python3 -c "
 import sys
 sys.path.insert(0, '/home/dsh/office-mode/skills/deep-research/scripts')
 from research import ResearchTracker
-tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', '~/office/<date>-<slug>/')
+tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', './output/<date>-<slug>/')
 tracker.add_source('https://example.com/article', 'Article Title', check_reachability=False)
 tracker.save_state()
 "
@@ -139,7 +144,7 @@ python3 -c "
 import sys
 sys.path.insert(0, '/home/dsh/office-mode/skills/deep-research/scripts')
 from research import ResearchTracker
-tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', '~/office/<date>-<slug>/')
+tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', './output/<date>-<slug>/')
 tracker.add_finding(
     sub_q_idx=0,
     finding='Key finding text here',
@@ -164,7 +169,7 @@ python3 -c "
 import sys, json
 sys.path.insert(0, '/home/dsh/office-mode/skills/deep-research/scripts')
 from research import ResearchTracker
-tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', '~/office/<date>-<slug>/')
+tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', './output/<date>-<slug>/')
 gaps = tracker.detect_knowledge_gaps()
 print(json.dumps(gaps, indent=2, ensure_ascii=False))
 "
@@ -186,7 +191,7 @@ print(json.dumps(gaps, indent=2, ensure_ascii=False))
 
 **Agent Actions**:
 1. Use matplotlib to generate charts.
-2. Save to `~/office/<date>-<slug>/charts/`.
+2. Save to `./output/<date>-<slug>/charts/`.
 3. Use Noto Sans CJK font: `~/office-toolchain/fonts/NotoSansCJKsc-Regular.otf`.
 4. Register charts:
 
@@ -196,8 +201,8 @@ import sys
 from pathlib import Path
 sys.path.insert(0, '/home/dsh/office-mode/skills/deep-research/scripts')
 from research import ResearchTracker
-tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', '~/office/<date>-<slug>/')
-tracker.add_chart(Path('~/office/<date>-<slug>/charts/chart_name.png'))
+tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', './output/<date>-<slug>/')
+tracker.add_chart(Path('./output/<date>-<slug>/charts/chart_name.png'))
 tracker.save_state()
 "
 ```
@@ -215,16 +220,16 @@ import sys
 from pathlib import Path
 sys.path.insert(0, '/home/dsh/office-mode/skills/deep-research/scripts')
 from research import ResearchTracker
-tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', '~/office/<date>-<slug>/')
+tracker = ResearchTracker.load('/home/dsh/office-mode/skills/deep-research/scripts', './output/<date>-<slug>/')
 report = tracker.generate_report()
-Path('~/office/<date>-<slug>/report.md').write_text(report)
+Path('./output/<date>-<slug>/report.md').write_text(report)
 print('Report generated')
 "
 ```
 
 **Output Structure**:
 ```
-~/office/<date>-<slug>/
+./output/<date>-<slug>/ ($PWD 之下)
 ├── research_state.json      # Machine-readable state
 ├── report.md                # Human-readable report
 └── charts/

@@ -77,6 +77,15 @@ When editing an existing Word document, use the **Document library** (a Python l
 3. Create and run a Python script using the Document library (see "Document Library" section in ooxml.md)
 4. Pack the final document: `~/office-toolchain/venv/bin/python ooxml/scripts/pack.py <input_directory> <office_file>`
 
+### Repacking rules (Word compatibility) — HARD CONSTRAINTS
+
+LibreOffice (soffice) is **lenient**: it opens files Word rejects. Therefore:
+
+- **NEVER repack with `zip`, `7z`, `jar`, or any archiver.** Manual `zip -r` adds explicit directory entries and arbitrary entry order — LibreOffice tolerates both, Word rejects the file. This has caused real breakage; `pack.py` is the only sanctioned way.
+- **Always use `ooxml/scripts/pack.py`** (writes files-only entries, `[Content_Types].xml` first, then validates the package with python-docx before soffice).
+- **Never use `--force`.** If validation fails, fix the XML; do not ship a file that only LibreOffice can open.
+- If you produce an Office file by any other route, validate with a strict library open (`python-docx` for .docx) before delivering. "soffice opens it" is NOT proof of validity.
+
 The Document library provides both high-level methods for common operations and direct DOM access for complex scenarios.
 
 ## Redlining workflow for document review

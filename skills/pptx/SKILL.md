@@ -185,6 +185,15 @@ When edit slides in an existing PowerPoint presentation, you need to work with t
 4. **CRITICAL**: Validate immediately after each edit and fix any validation errors before proceeding: `~/office-toolchain/venv/bin/python ooxml/scripts/validate.py <dir> --original <file>`
 5. Pack the final presentation: `~/office-toolchain/venv/bin/python ooxml/scripts/pack.py <input_directory> <office_file>`
 
+### Repacking rules (PowerPoint compatibility) — HARD CONSTRAINTS
+
+LibreOffice (soffice) is **lenient**: it opens files PowerPoint rejects. Therefore:
+
+- **NEVER repack with `zip`, `7z`, `jar`, or any archiver.** Manual `zip -r` adds explicit directory entries and arbitrary entry order — LibreOffice tolerates both, PowerPoint rejects the file. This has caused real breakage; `pack.py` is the only sanctioned way.
+- **Always use `ooxml/scripts/pack.py`** (writes files-only entries, `[Content_Types].xml` first, then validates the package with python-pptx before soffice).
+- **Never use `--force`.** If validation fails, fix the XML; do not ship a file that only LibreOffice can open.
+- If you produce an Office file by any other route, validate with a strict library open (`python-pptx` for .pptx) before delivering. "soffice opens it" is NOT proof of validity.
+
 ## Creating a new PowerPoint presentation **using a template**
 
 When you need to create a presentation that follows an existing template's design, you'll need to duplicate and re-arrange template slides before then replacing placeholder context.
