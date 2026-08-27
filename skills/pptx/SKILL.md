@@ -485,3 +485,7 @@ pdftoppm -jpeg -r 150 -f 2 -l 5 template.pdf slide  # Converts only pages 2-5
 - Avoid verbose variable names and redundant operations
 - Avoid unnecessary print statements
 
+
+## Gotchas（DSH 环境实测固化）
+
+- **PPT→PDF 中文豆腐块（已修复 2026-08-27）**：LibreOffice 渲染依赖 fontconfig，服务器默认 0 个中文字体，成品引用「微软雅黑/宋体」等字体名时全部渲染成方块。修复链：①思源黑体/宋体装到 `~/.local/share/fonts/`；②`~/.config/fontconfig/fonts.conf` 建立别名（微软雅黑→Noto Sans CJK SC、宋体/仿宋/楷体/方正小标宋→Noto Serif CJK SC，配置存于 office-mode 仓库 `fonts-config/fonts.conf`）；③`fc-cache -f`。验证门槛：转换前 `fc-match "微软雅黑"` 必须返回 Noto 字体而非拉丁 fallback；转换后 pdftoppm 出图目视检查无方块。
