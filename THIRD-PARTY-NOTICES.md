@@ -7,6 +7,7 @@
 | `skills/docx/` `skills/pptx/` `skills/xlsx/` | [appautomaton/document-skills](https://github.com/appautomaton/document-skills) | MIT | 含 SKILL.md、ooxml 脚本与 XSD schema;本地改动:`uv run` 调用方式替换为 venv python 绝对路径 |
 | `skills/xberg/` | [kreuzberg-dev/kreuzberg](https://github.com/kreuzberg-dev/kreuzberg) `plugin/skills/xberg` | MIT | 仅取 SKILL.md;运行时依赖 kreuzberg pip 包(未捆绑) |
 | `skills/frontend-slides/` | [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | **上游未声明** | 仅内部使用;如需再分发,须先取得上游授权或上游补充许可证 |
+| `skills/presentation-deck/` | [owl-listener/designer-skills](https://github.com/owl-listener/designer-skills) `designer-toolkit/skills/presentation-deck` | MIT | 本地改动:frontmatter description 扩展中英触发词(正文未动) |
 | `skills/deep-research/` | 自研 | 见本仓库 LICENSE | 含 scripts/research.py |
 | `skills/report-writing/` | 自研 | 见本仓库 LICENSE | GB/T 9704 参数表为公开标准要点的整理 |
 

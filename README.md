@@ -39,6 +39,7 @@ Python 库:`python-docx python-pptx openpyxl pandas matplotlib pypandoc-binary`(
 │   ├── docx/ pptx/ xlsx/     # 来自 appautomaton/document-skills (MIT)
 │   ├── xberg/                # 来自 kreuzberg-dev/kreuzberg (MIT)
 │   ├── frontend-slides/      # 来自 zarazhangrui/frontend-slides
+│   ├── presentation-deck/   # 来自 owl-listener/designer-skills (MIT)
 │   └── deep-research/ report-writing/  # 自研
 ├── templates/style.json  # 颜色/字体/版式参数
 ├── fonts-config/         # fontconfig 中文别名(豆腐块修复)
