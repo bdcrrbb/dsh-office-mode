@@ -202,3 +202,33 @@ pdftoppm -jpeg -r 150 -f 2 -l 5 document.pdf page  # Converts only pages 2-5
 - Avoid verbose variable names and redundant operations
 - Avoid unnecessary print statements
 
+
+## 中文排版强制项(2026-09-02)
+
+### eastAsia 语言标记(标点禁则/行首禁排的前提)
+
+只设 eastAsia **字体**不够——Word 的行首禁则(,,。、;:?!》等收尾标点不落行首)仅对标记为**东亚语言**的文本生效;缺标记时 Word 按西文断行,标点会出现在行首。所有中文 run 必须带语言标记:
+
+**docx-js(创建路径)**——每个 TextRun 加:
+```js
+new TextRun({ text: "正文", font: {...}, language: { value: "zh-CN", eastAsia: "zh-CN" } })
+```
+
+**python-docx(GB 公文/脚本路径)**——封装进 set_run_font():
+```python
+from docx.oxml.ns import qn
+def mark_cjk(run):
+    rPr = run._element.get_or_add_rPr()
+    lang = rPr.find(qn('w:lang'))
+    if lang is None:
+        lang = rPr.makeelement(qn('w:lang'), {}); rPr.append(lang)
+    lang.set(qn('w:eastAsia'), 'zh-CN')
+```
+
+生成后自检:抽 run 断言 `w:lang/@w:eastAsia == 'zh-CN'`。禁止用插空格/换行手工规避行首标点。
+
+### 公文缩进与落款(GB/T 9704)
+
+- 正文与结构层次标题(一、/(一)/1./(1)):首行缩进 2 字(标题不顶格——红头文件实践)
+- 发文机关署名:右空 2 字(段落 right_indent,非右对齐)
+- 成文日期:右空 4 字
