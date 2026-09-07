@@ -489,3 +489,22 @@ pdftoppm -jpeg -r 150 -f 2 -l 5 template.pdf slide  # Converts only pages 2-5
 ## Gotchas（DSH 环境实测固化）
 
 - **PPT→PDF 中文豆腐块（已修复 2026-08-27）**：LibreOffice 渲染依赖 fontconfig，服务器默认 0 个中文字体，成品引用「微软雅黑/宋体」等字体名时全部渲染成方块。修复链：①思源黑体/宋体装到 `~/.local/share/fonts/`；②`~/.config/fontconfig/fonts.conf` 建立别名（微软雅黑→Noto Sans CJK SC、宋体/仿宋/楷体/方正小标宋→Noto Serif CJK SC，配置存于 office-mode 仓库 `fonts-config/fonts.conf`）；③`fc-cache -f`。验证门槛：转换前 `fc-match "微软雅黑"` 必须返回 Noto 字体而非拉丁 fallback；转换后 pdftoppm 出图目视检查无方块。
+
+## 中文排版强制项（2026-09-07，与 docx skill 对应）
+
+### eastAsia 语言标记（标点禁则/行首禁排的前提）
+
+PowerPoint 的行首禁则（，。、；：？！》等收尾标点不落行首）仅对带 `lang="zh-CN"` 的 run 生效；缺标记时按西文断行，标点出现在行首。**每个含中文的 run 必须设语言标记。**
+
+**python-pptx**（DrawingML 的 rPr 是 `lang` 属性，非 docx 的 w:lang）——封装进 set_text_frame_font()：
+```python
+def mark_cjk(run):
+    run._r.get_or_add_rPr().set('lang', 'zh-CN')
+```
+
+**pptxgenjs**（html2pptx 路径）——每个 addText 的 options 加：
+```js
+pptx.addText("中文内容", { lang: "zh-CN", ... })
+```
+
+生成后自检：遍历所有 slide 的 run，含 CJK 字符的 run 断言 `a:rPr/@lang == 'zh-CN'`。禁止手工加空格/换行规避行首标点。文本框须 `word_wrap = True`（禁则作用于换行处）。
