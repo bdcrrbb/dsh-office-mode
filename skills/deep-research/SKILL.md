@@ -3,11 +3,9 @@ name: deep-research
 description: "深度调研引擎:先于写作技能使用。当用户要求 深入研究/深度调研/全面分析/系统评估/市场格局分析/竞品调研/技术选型评估/文献综述,或调研主题需要拆分为≥3个子问题、需要多来源交叉验证时触发。产出带来源引用与质量分级的调研内容,之后再用 report-writing/docx 等技能成文。Use for deep research, comprehensive analysis, competitive landscape, due diligence — runs BEFORE writing/formatting skills."
 ---
 
-## 搜索工具降级(2026-09-08)
+## 搜索工具(2026-09-08 起)
 
-原生 `web_search` 后端(DeepSeek)欠费 402 时,改用智谱搜索 MCP 工具:
-`mcp__web-search-prime__web_search_prime`(参数 query,可选 search_domains 限定站点)。
-两工具结果结构等价(标题+URL+摘要),引用规范不变。
+**联网搜索一律用智谱 MCP 工具 `mcp__web-search-prime__web_search_prime`**(参数 query,可选 search_domains 限定站点),原生 `web_search` 已在本部署禁用。结果含标题+URL+摘要,引用规范不变。
 
 ## 输出位置规范(全局)
 

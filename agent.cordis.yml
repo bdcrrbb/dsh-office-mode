@@ -193,4 +193,5 @@
   name: '@deepseek-ai/dsh-tool-web'
   config:
     fetch: true
+    search: false   # 2026-09-08: 原生搜索后端欠费;搜索走智谱 MCP
     searchTimeoutMs: 60000
