@@ -10,6 +10,7 @@
 | `skills/presentation-deck/` | [owl-listener/designer-skills](https://github.com/owl-listener/designer-skills) `designer-toolkit/skills/presentation-deck` | MIT | 本地改动:frontmatter description 扩展中英触发词(正文未动) |
 | `skills/kw-data/`(10 skills) | [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) `data/skills` | Apache-2.0 | Anthropic 官方知识工作套件;CONNECTORS.md 引用的外部连接器未随附,相关步骤降级为纯文本生成 |
 | `skills/kw-product-management/`(8 skills) | 同上 `product-management/skills` | Apache-2.0 | 同上 |
+| `skills/gongwen/` | [mizzlelover/gongwen-gbt9704-skill](https://github.com/mizzlelover/gongwen-gbt9704-skill) | MIT | 529★专用公文生成器(GB/T 9704-2012 全要素);本地裁剪:移除 .git/marketing/punk-assets |
 | `skills/baoyu-diagram/` | [jimliu/baoyu-skills](https://github.com/jimliu/baoyu-skills) `skills/baoyu-diagram` | MIT | 与 baoyu-infographic 同作者;纯 SVG 代码生成,零外部依赖 |
 | `skills/deep-research/` | 自研 | 见本仓库 LICENSE | 含 scripts/research.py |
 | `skills/report-writing/` | 自研 | 见本仓库 LICENSE | GB/T 9704 参数表为公开标准要点的整理 |

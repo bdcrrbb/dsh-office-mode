@@ -37,7 +37,11 @@ description: "写作方法论与结构决策:负责'怎么写'(结构/格式),�
 | 页码 | 宋体，四号（14pt），双面外侧 |
 | 拉丁/数字 | Times New Roman |
 
-## 公文版式细则（GB/T 9704-2012 补充，2026-09-02）
+## 公文版式：一律用 gongwen skill 生成（2026-09-12 起）
+
+公文的排版生成**不再手工拼参数**，直接用 `gongwen` skill(mizzlelover/gongwen-gbt9704-skill,MIT):`node skills/gongwen/scripts/generate_gongwen_docx.mjs --input 稿件.md --output 公文.docx --format ordinary|formal ...`。它覆盖版心/字体/文号/页码/附件/版记/红头(套打与电子)/信函/命令/纪要/横排表格/联合行文,自带 verify 脚本。本 skill 只负责内容方法论;以下参数表仅作速查:
+
+## 公文版式细则（速查,生成请走 gongwen skill；GB/T 9704-2012 补充，2026-09-02）
 
 | 元素 | 规范 |
 |---|---|
